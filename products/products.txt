@@ -1,0 +1,5 @@
+positive_sound: Bose SoundLink Revolve+ (Great sound, 17-hour battery)
+positive_battery: JBL Charge 5 (Excellent battery life, good sound)
+negative_sound: Sony SRS-XB23 (Improved sound quality for budget)
+negative_battery: Anker Soundcore Motion+ (Long battery life)
+neutral_default: Sony WH-1000XM5 (Popular all-around headphones)

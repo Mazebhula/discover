@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Sentiment Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="file"], button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-box {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .result-section {
+            margin-bottom: 20px;
+        }
+        .result-section h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .result-section p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .positive {
+            color: #27ae60; /* Green for positive */
+            font-weight: bold;
+        }
+        .negative {
+            color: #c0392b; /* Red for negative */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Sentiment Analyzer</h1>
+        <form id="uploadForm" enctype="multipart/form-data" class="form-group">
+            <input type="file" name="file" accept="audio/*" required>
+            <button type="submit">Analyze</button>
+        </form>
+        <div id="result" class="result-box">
+            <div class="result-section">
+                <h2>Sentiment</h2>
+                <p id="label"></p>
+            </div>
+            <div class="result-section">
+                <h2>Key Insights</h2>
+                <p id="keywords"></p>
+            </div>
+            <div class="result-section">
+                <h2>Product Suggestion</h2>
+                <p id="suggestion"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                const labelElement = document.getElementById('label');
+                labelElement.textContent = result.label;
+                
+                // Apply color based on sentiment
+                labelElement.className = ''; // Clear any existing classes
+                if (result.label.toLowerCase() === 'positive') {
+                    labelElement.classList.add('positive');
+                } else if (result.label.toLowerCase() === 'negative') {
+                    labelElement.classList.add('negative');
+                }
+                
+                document.getElementById('keywords').textContent = result.keywords;
+                document.getElementById('suggestion').textContent = result.suggestion;
+                document.getElementById('result').style.display = 'block';
+            } else {
+                alert(result.error || 'An error occurred');
+            }
+        });
+    </script>
+</body>
+</html>
